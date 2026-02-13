@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { LucideArrowUpRight, LucideWallet, LucideUsers } from 'lucide-react';
+import { LucideArrowUpRight, LucideArrowDownLeft, LucideWallet, LucideUsers } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function DashboardPage() {
@@ -94,7 +94,7 @@ export default function DashboardPage() {
                 <Card className="hover:bg-accent/50 transition-colors cursor-pointer border-dashed">
                     <CardContent className="flex flex-col items-center justify-center p-6 space-y-3 text-center">
                         <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                            <LucideArrowUpRight className="h-6 w-6 rotate-180" />
+                            <LucideArrowDownLeft className="h-6 w-6" />
                         </div>
                         <div className="space-y-1">
                             <h3 className="font-semibold">Get Paid</h3>
@@ -147,7 +147,7 @@ export default function DashboardPage() {
                                         <div className="flex items-center space-x-4">
                                             <div className={`h-9 w-9 rounded-full flex items-center justify-center ${isIncoming ? 'bg-emerald-100' : 'bg-accent'}`}>
                                                 {isIncoming ? (
-                                                    <LucideArrowUpRight className="h-5 w-5 text-emerald-600 rotate-180" />
+                                                    <LucideArrowDownLeft className="h-5 w-5 text-emerald-600" />
                                                 ) : (
                                                     <LucideArrowUpRight className="h-5 w-5 text-muted-foreground" />
                                                 )}

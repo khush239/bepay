@@ -41,15 +41,8 @@ export default function TransactionsPage() {
     }, []);
 
     const filteredTransactions = transactions.filter(t => {
-        const searchMatch =
-            t.beneficiary?.name.toLowerCase().includes(filter.toLowerCase()) ||
-            t.sender?.name.toLowerCase().includes(filter.toLowerCase()) ||
-            t.receiver?.name.toLowerCase().includes(filter.toLowerCase()) ||
-            t.id.includes(filter);
-
         const statusMatch = statusFilter === 'ALL' || t.status === statusFilter;
-
-        return searchMatch && statusMatch;
+        return statusMatch;
     });
 
     return (
@@ -66,15 +59,6 @@ export default function TransactionsPage() {
                             <CardDescription>View and manage all your incoming and outgoing transactions.</CardDescription>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="relative">
-                                <LucideSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search transactions..."
-                                    value={filter}
-                                    onChange={(e) => setFilter(e.target.value)}
-                                    className="pl-9 w-[250px] bg-muted/50"
-                                />
-                            </div>
                             <Select value={statusFilter} onValueChange={setStatusFilter}>
                                 <SelectTrigger className="w-[130px]">
                                     <div className="flex items-center gap-2">

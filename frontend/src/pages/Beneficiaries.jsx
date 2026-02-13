@@ -167,7 +167,6 @@ export default function BeneficiariesPage() {
                             <TableRow className="hover:bg-transparent border-b border-gray-100">
                                 <TableHead className="w-[300px] text-xs font-medium text-muted-foreground uppercase tracking-wider pl-6">Name</TableHead>
                                 <TableHead className="text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Pay via</TableHead>
-                                <TableHead className="text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -197,39 +196,13 @@ export default function BeneficiariesPage() {
                                             >
                                                 <LucideBuilding2 className="h-4 w-4" />
                                             </Button>
-                                            {ben.email && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-8 w-8 rounded-full bg-purple-50 text-purple-600 border-purple-100 hover:bg-purple-100 hover:text-purple-700 hover:border-purple-200"
-                                                    title="Pay via Email"
-                                                    onClick={() => setSelectedBeneficiary(ben)}
-                                                >
-                                                    <LucideMail className="h-4 w-4" />
-                                                </Button>
-                                            )}
                                         </div>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600">
-                                                    <span className="sr-only">Open menu</span>
-                                                    <LucideMoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => setSelectedBeneficiary(ben)}>Send Money</DropdownMenuItem>
-                                                <DropdownMenuItem>Edit Details</DropdownMenuItem>
-                                                <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
                             ))}
                             {filteredBeneficiaries.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
+                                    <TableCell colSpan={2} className="h-24 text-center text-muted-foreground">
                                         No beneficiaries found.
                                     </TableCell>
                                 </TableRow>
