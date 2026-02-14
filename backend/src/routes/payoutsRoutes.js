@@ -3,6 +3,7 @@ const express = require("express");
 const {
     getBeneficiaries,
     createBeneficiary,
+    updateBeneficiary,
     getAllPayouts,
     createPayout,
     getReconciliation,
@@ -15,6 +16,7 @@ const router = express.Router();
 // Beneficiaries
 router.get('/beneficiaries', authenticate, getBeneficiaries);
 router.post('/beneficiaries', authenticate, createBeneficiary);
+router.put('/beneficiaries/:id', authenticate, updateBeneficiary);
 
 // Routes
 router.get('/', authenticate, getAllPayouts);

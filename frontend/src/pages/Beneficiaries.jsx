@@ -104,6 +104,16 @@ export default function BeneficiariesPage() {
         }
     };
 
+    const onEditBeneficiary = async (id, name) => {
+        try {
+            await api.put(`/payouts/beneficiaries/${id}`, { name });
+            setBeneficiaries(beneficiaries.map(b => (b._id === id || b.id === id) ? { ...b, name } : b));
+        } catch (error) {
+            console.error('Failed to update beneficiary', error);
+            alert('Failed to update beneficiary');
+        }
+    };
+
     const filteredBeneficiaries = beneficiaries.filter(b =>
         b.name.toLowerCase().includes(search.toLowerCase()) ||
         b.email?.toLowerCase().includes(search.toLowerCase())
@@ -167,6 +177,7 @@ export default function BeneficiariesPage() {
                             <TableRow className="hover:bg-transparent border-b border-gray-100">
                                 <TableHead className="w-[300px] text-xs font-medium text-muted-foreground uppercase tracking-wider pl-6">Name</TableHead>
                                 <TableHead className="text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Pay via</TableHead>
+                                <TableHead className="text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -197,6 +208,9 @@ export default function BeneficiariesPage() {
                                                 <LucideBuilding2 className="h-4 w-4" />
                                             </Button>
                                         </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <EditBeneficiaryDialog beneficiary={ben} onSave={onEditBeneficiary} />
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -249,5 +263,48 @@ export default function BeneficiariesPage() {
                 </DialogContent>
             </Dialog>
         </div>
+    );
+}
+
+function EditBeneficiaryDialog({ beneficiary, onSave }) {
+    const [open, setOpen] = useState(false);
+    const [name, setName] = useState(beneficiary.name);
+    const [loading, setLoading] = useState(false);
+
+    const handleSave = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await onSave(beneficiary._id || beneficiary.id, name);
+            setOpen(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50">Edit</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit Beneficiary</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSave} className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Name</label>
+                        <Input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Beneficiary Name"
+                        />
+                    </div>
+                    <Button type="submit" disabled={loading} className="w-full">
+                        {loading ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 }

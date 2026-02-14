@@ -88,6 +88,8 @@ export default function PayoutsPage() {
 
     useEffect(() => {
         fetchData();
+        const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
+        return () => clearInterval(interval);
     }, []);
 
     const onAddBeneficiary = async (values) => {
@@ -315,7 +317,7 @@ export default function PayoutsPage() {
                                                 </FormControl>
                                                 <SelectContent>
                                                     {beneficiaries.map((ben) => (
-                                                        <SelectItem key={ben.id} value={ben.id}>{ben.name} ({ben.currency})</SelectItem>
+                                                        <SelectItem key={ben._id || ben.id} value={ben._id || ben.id}>{ben.name} ({ben.currency})</SelectItem>
                                                     ))}
                                                 </SelectContent>
                                             </Select>

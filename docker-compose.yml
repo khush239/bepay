@@ -1,18 +1,38 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: bepay-postgres
+  mongo:
+    image: mongo:6-alpine
+    container_name: bepay-mongo
     restart: always
-    environment:
-      POSTGRES_USER: bepay
-      POSTGRES_PASSWORD: bepayrequestPassword
-      POSTGRES_DB: bepay_db
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: bepay-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/bepay
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: bepay-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+    depends_on:
+      - backend
 
 volumes:
-  postgres_data:
+  mongo_data:

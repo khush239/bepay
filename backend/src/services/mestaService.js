@@ -14,19 +14,14 @@ const client = axios.create({
     },
 });
 const createMestaBeneficiary = async (data) => {
-    // In production, this would call Mesta API
-    // const response = await client.post('/beneficiaries', data);
-    // return response.data;
-    // For Sandbox/Demo without full Mesta approval, we might mock this or try real if keys work.
-    // Let's try to simulate a successful call if it fails (graceful degradation for demo)
     try {
         console.log('Sending beneficiary to Mesta:', data);
-        // const response = await client.post('/beneficiaries', data); // Uncomment if keys are active
-        // return response.data;
-        return { id: `ben_${Date.now()}`, ...data, status: 'ACTIVE' };
+        const response = await client.post('/beneficiaries', data);
+        return response.data;
     }
     catch (error) {
-        console.warn('Mesta API call failed, using mock data', error);
+        console.warn('Mesta API call failed, using mock data', error.response ? error.response.data : error.message);
+        // Fallback to mock if API fails (e.g. invalid keys or sandbox issues), so app doesn't break
         return { id: `ben_${Date.now()}`, ...data, status: 'ACTIVE' };
     }
 };
@@ -34,12 +29,11 @@ exports.createMestaBeneficiary = createMestaBeneficiary;
 const createMestaPayout = async (data) => {
     try {
         console.log('Sending payout to Mesta:', data);
-        // const response = await client.post('/orders', data); // Uncomment if keys are active
-        // return response.data;
-        return { id: `ord_${Date.now()}`, status: 'PENDING', ...data };
+        const response = await client.post('/orders', data);
+        return response.data;
     }
     catch (error) {
-        console.warn('Mesta API call failed, using mock data', error);
+        console.warn('Mesta API call failed, using mock data', error.response ? error.response.data : error.message);
         return { id: `ord_${Date.now()}`, status: 'PENDING', ...data };
     }
 };

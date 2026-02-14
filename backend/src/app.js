@@ -23,6 +23,11 @@ app.use('/api/organizations', organizationRoutes);
 app.use('/api/payouts', payoutsRoutes);
 app.use('/api/internal', internalRoutes);
 app.use('/api/webhooks', webhookRoutes);
+
+app.get('/api', (req, res) => {
+    res.json({ message: 'Bepay API is running' });
+});
+
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to bepay money API' });
 });

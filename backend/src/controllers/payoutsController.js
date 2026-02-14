@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportReconciliation = exports.getReconciliation = exports.createPayout = exports.getAllPayouts = exports.createBeneficiary = exports.getBeneficiaries = void 0;
+exports.exportReconciliation = exports.getReconciliation = exports.createPayout = exports.getAllPayouts = exports.updateBeneficiary = exports.createBeneficiary = exports.getBeneficiaries = void 0;
 const mestaService_1 = require("../services/mestaService");
 const Organization = require("../models/Organization");
 const Beneficiary = require("../models/Beneficiary");
@@ -56,6 +56,38 @@ const createBeneficiary = async (req, res) => {
     }
 };
 exports.createBeneficiary = createBeneficiary;
+
+// Update a beneficiary
+const updateBeneficiary = async (req, res) => {
+    try {
+        const user = req.user;
+        const { id } = req.params;
+        const { name } = req.body;
+
+        const organization = await Organization.findOne({ userId: user._id });
+        if (!organization)
+            return res.status(404).json({ message: 'Organization not found' });
+
+        // Verify beneficiary belongs to org
+        const beneficiary = await Beneficiary.findOne({ _id: id, organizationId: organization._id });
+        if (!beneficiary) {
+            return res.status(404).json({ message: 'Beneficiary not found' });
+        }
+
+        // Update in DB
+        beneficiary.name = name;
+        await beneficiary.save();
+
+        // TODO: Update in Mesta if supported/needed
+
+        res.json(beneficiary);
+    }
+    catch (error) {
+        console.error('Update Beneficiary Error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+exports.updateBeneficiary = updateBeneficiary;
 
 // Get all payouts (External + Internal SENT + Internal RECEIVED)
 const getAllPayouts = async (req, res) => {
@@ -141,6 +173,16 @@ const createPayout = async (req, res) => {
             mestaPayoutId: mestaOrder.id,
             description,
         });
+
+        // DEMO ONLY: Automatically complete payout after 10 seconds to simulate webhook
+        setTimeout(async () => {
+            try {
+                await Payout.findByIdAndUpdate(payout._id, { status: 'COMPLETED' });
+                console.log(`[DEMO] Automatically completed payout ${payout._id}`);
+            } catch (err) {
+                console.error('[DEMO] Failed to auto-complete payout', err);
+            }
+        }, 10000);
 
         res.status(201).json(payout);
     }
